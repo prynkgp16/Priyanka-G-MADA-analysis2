@@ -21,6 +21,9 @@ data_location <- here::here("data","raw_data","exampledata.xlsx")
 #but it adds typing. You can do it either way.
 rawdata <- readxl::read_excel(data_location)
 
+#load data
+rawdata <- read.csv(data_location)
+
 #take a look at the data
 dplyr::glimpse(rawdata)
 
@@ -50,6 +53,34 @@ print(rawdata)
 processeddata <- rawdata %>% dplyr::filter( Height != "sixty" ) %>% 
                              dplyr::mutate(Height = as.numeric(Height)) %>% 
                              dplyr::filter(Height > 50 & Weight < 1000)
+
+
+#take a look at the data
+dplyr::glimpse(rawdata)
+
+#renaming the columns
+colnames(rawdata) [1] <- 'State'
+colnames(rawdata) [2] <- 'Alcohol.Impaired.Driving.Deaths'
+colnames(rawdata) [3] <- 'Occupant.Deaths'
+
+#Crosscheck
+View(rawdata)
+
+
+#Include data for FLORIDA
+processeddata <- rawdata %>% dplyr::filter( State != "FL" )
+processeddata <- rawdata %>%select(State, Alcohol.Impaired.Driving.Deaths, Occupant.Deaths ) %>%filter(State == 'FL')
+
+
+#Crosscheck
+dplyr::glimpse(processeddata)
+
+#Include data for Georgia
+processeddata <- rawdata %>% dplyr::filter( State != "GA" )
+processeddata <- rawdata %>%select(State, Alcohol.Impaired.Driving.Deaths, Occupant.Deaths ) %>%filter(State == 'GA')
+
+#Crosscheck
+dplyr::glimpse(processeddata)
 
 # save data as RDS
 # I suggest you save your processed and cleaned data as RDS or RDA/Rdata files. 
