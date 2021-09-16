@@ -23,6 +23,17 @@ mydata <- readRDS(data_location)
 #Lots of good packages exist to do more.
 #For instance check out the tableone or skimr packages
 
+
+###
+library(tidyverse)
+#MYC Edits to Data 2021.09.14
+mydata<-mydata%>%
+  filter(State!="sixty")%>%
+  mutate(State=as.numeric(State))
+
+
+
+
 #summarize data 
 mysummary = summary(mydata)
 
@@ -40,7 +51,10 @@ saveRDS(summary_df, file = summarytable_file)
 
 #make a scatterplot of data
 #we also add a linear regression line to it
-p1 <- mydata %>% ggplot(aes(x=Height, y=Weight)) + geom_point() + geom_smooth(method='lm')
+p1 <-   mydata %>% 
+  ggplot(aes(y=log10(Alcohol.Impaired.Driving.Deaths), x=State))+
+           geom_point() + 
+           geom_smooth(method='lm')
 
 #look at figure
 plot(p1)
@@ -54,7 +68,7 @@ ggsave(filename = figure_file, plot=p1)
 ######################################
 
 # fit linear model
-lmfit <- lm(Weight ~ Height, mydata)  
+lmfit <- lm(Alcohol.Impaired.Driving.Deaths ~ State, mydata)  
 
 # place results from fit into a data frame with the tidy function
 lmtable <- broom::tidy(lmfit)
